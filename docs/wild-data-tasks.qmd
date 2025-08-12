@@ -2,5 +2,52 @@
 title: "Wild Data"
 author: "Henry Oliver"
 format: html
+echo: FALSE
+warning: FALSE
 ---
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+
+mack_verts <- read_csv(here::here("data", "AS00601.csv"))
+mack_verts
+
+mack_verts <- mack_verts %>% clean_names()
+mack_verts
+
+```
+
+```{r}
+# Make some subsets
+mc_wt_5 <- mack_verts$weight[5]
+mc_wt_5
+
+mc_length_8_20 <- mack_verts$length1[8:20]
+mc_length_8_20
+
+mc_dates <- mack_verts$sampledate
+
+```
+
+
+```{r}
+mc_salamanders <- dplyr::filter(mack_verts, species=="DITE")
+
+salamander_plot <- ggplot(mc_salamanders, aes(x = length1, y = weight)) +
+          labs(x = "Length (mm)", y = "Weight (g)", title = "Salamander Weight as a Function of Length", subtitle = "You like that huh?") +
+         geom_point()
+
+plot
+
+ggsave(here::here("figs", "salamander_plot.png"), height = 5, width = 6)
+
+
+
+```
+
+```{r}
+
+```
 
