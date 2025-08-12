@@ -36,7 +36,7 @@ mc_dates <- mack_verts$sampledate
 mc_salamanders <- dplyr::filter(mack_verts, species=="DITE")
 
 salamander_plot <- ggplot(mc_salamanders, aes(x = length1, y = weight)) +
-          labs(x = "Length (mm)", y = "Weight (g)", title = "Salamander Weight as a Function of Length", subtitle = "You like that huh?") +
+          labs(x = "Length (mm)", y = "Weight (g)", title = "Salamander Weight as a Function of Length", subtitle = "Dicamptodon tenebrosus") +
          geom_point()
 
 plot
@@ -48,6 +48,15 @@ ggsave(here::here("figs", "salamander_plot.png"), height = 5, width = 6)
 ```
 
 ```{r}
+mc_trout <- dplyr::filter(mack_verts, species=="ONCL")
+
+ggplot(mc_trout, aes(x = length1, y = weight, colour = reach))+
+  labs(x = "Length (mm)", y = "Weight (g)") +
+  scale_color_manual(values = c("orange", "purple", "gold")) +
+  facet_wrap(~reach) +
+  geom_point()
+  
+ggsave(here::here("figs", "cutthroat_size.png"), height = 5, width = 6)
 
 ```
 
