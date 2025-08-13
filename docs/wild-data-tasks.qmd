@@ -11,9 +11,11 @@ library(tidyverse)
 library(here)
 library(janitor)
 
+# Tell the computer to read the csv with creature data
 mack_verts <- read_csv(here::here("data", "AS00601.csv"))
 mack_verts
 
+# Use the janitor package to make all the data labels lowercase
 mack_verts <- mack_verts %>% clean_names()
 mack_verts
 
@@ -24,23 +26,33 @@ mack_verts
 mc_wt_5 <- mack_verts$weight[5]
 mc_wt_5
 
+# Create a subset of length1 data values 8-20
 mc_length_8_20 <- mack_verts$length1[8:20]
 mc_length_8_20
 
+# Create an object that is just the dates for the mack_verts data
 mc_dates <- mack_verts$sampledate
-
+typeof(mc_dates)
+class(mc_dates)
 ```
 
 
 ```{r}
+# Filter the mack_verts data by species to return only DITE
 mc_salamanders <- dplyr::filter(mack_verts, species=="DITE")
 
-salamander_plot <- ggplot(mc_salamanders, aes(x = length1, y = weight)) +
+# Plot a scatterplot of length v weight of salamanders. the color of the graph is determined by the vert index
+salamander_plot <- ggplot(mc_salamanders, aes(x = length1, y = weight, color = vert_index )) +
           labs(x = "Length (mm)", y = "Weight (g)", title = "Salamander Weight as a Function of Length", subtitle = "Dicamptodon tenebrosus") +
-         geom_point()
+  # Say what kind of graph you want, specify the shape of the dots
+         geom_point(linetype = 3, size=0.75, shape = 24 ) +
+  # Set the color gradient
+        scale_color_gradient(low = "#f03b20", high = "#2c7fb8")
 
-plot
+#plot it
+salamander_plot
 
+# Save the plot to the figs folder
 ggsave(here::here("figs", "salamander_plot.png"), height = 5, width = 6)
 
 
@@ -48,14 +60,17 @@ ggsave(here::here("figs", "salamander_plot.png"), height = 5, width = 6)
 ```
 
 ```{r}
+#Filter the data by species to return trouts
 mc_trout <- dplyr::filter(mack_verts, species=="ONCL")
 
+#Create a scatterplot that separates the data by reach
 ggplot(mc_trout, aes(x = length1, y = weight, colour = reach))+
   labs(x = "Length (mm)", y = "Weight (g)") +
-  scale_color_manual(values = c("orange", "purple", "gold")) +
+  scale_color_manual(values = c("#b2e2e2", "#66c2a4", "#238b45")) +
   facet_wrap(~reach) +
-  geom_point()
+  geom_point(linetype=3, linesize=1, size=0.9, shape=24, fill=12 )
   
+#Save it
 ggsave(here::here("figs", "cutthroat_size.png"), height = 5, width = 6)
 
 ```
